@@ -7,9 +7,12 @@ Sources: [`/docs/project-configuration`](https://vercel.com/docs/project-configu
 [monorepos](https://vercel.com/docs/monorepos)
 Read `2026-08-06`.
 
-## There are four places a setting can live, and they do not all win equally
+## There are at least SIX places a setting can live, and they do not all win equally
 
-`vercel.json`, dashboard project settings, framework config, and code-level exports. When two
+`vercel.json`, **`vercel.ts`**, dashboard project settings, framework config, code-level exports, and
+**project-level routing rules** (dashboard/API — they *"run after bulk redirects and before your
+deployment's own routes"* and can change *"without deploying new code"*). An earlier revision of
+this file said four and missed the last two, one of which is a real precedence actor. When two
 disagree, the practical precedence is: **per-function code/`vercel.json` beats project-level
 defaults, and anything a deployment carries beats the dashboard.**
 
@@ -17,7 +20,13 @@ The rule that saves the most time: **pick one home per setting and say so.** A `
 in both `vercel.json` and a route export is not belt-and-braces — it is two truths, and the
 next person changes the one that is not in effect.
 
-**Prefer `vercel.json` and code over the dashboard** for anything that should be reviewable.
+**Prefer `vercel.json` and code over the dashboard where you have the choice — and often you do
+not.** Corrected 2026-08-06: an earlier revision called memory "the one documented exception". It is
+one of at least eight. Dashboard/API-only: memory (under fluid compute), the concurrency toggle,
+deployment protection, the OPTIONS allowlist, spend management, deployment retention, skew
+protection, and drains. Do not send a reader hunting for `vercel.json` keys that do not exist.
+
+For everything that *is* expressible in config, prefer it,
 A dashboard setting has no diff, no author, and no history in your repo — so it is invisible
 to code review and absent from a fresh clone. Reserve the dashboard for values that genuinely
 differ per environment and for secrets.

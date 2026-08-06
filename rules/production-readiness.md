@@ -32,8 +32,12 @@ they will find it.
 
 ### Security — "what is exposed that should not be?"
 
-**(Vercel)** CSP and security headers · Deployment Protection · WAF. **(added)** the OIDC and
-sensitive-variable items below.
+**(Vercel)** — and there are **thirteen**, not the three an earlier revision listed: CSP and
+security headers · Deployment Protection · WAF · **Log Drains** · **rate limiting** · **access
+roles (RBAC)** · **SAML SSO** · **SCIM** · **Audit Logs** · **commit your lockfiles** · **Preview
+Deployment Suffix** · **SSL certificate checks** · **a bad-bot firewall rule**. Listing three told
+readers that ten genuine Vercel items were mine — the exact failure the attribution fix existed to
+correct. **(added)**: the OIDC and sensitive-variable items below.
 
 - A **Content Security Policy** and the standard security headers. Add it early in
   report-only mode; a CSP added late is a CSP that breaks a live page.
@@ -73,11 +77,16 @@ caching headers · understand caching vs ISR · **Tracing** · load testing.
 Every cost question resolves to one of three quantities, and **the answer changes what you
 do**:
 
+**The billing dimensions under fluid compute are Active CPU, Provisioned Memory and Invocations**
+— corrected 2026-08-06; an earlier revision used the pre-fluid invocations/duration/bytes model.
+Active CPU *pauses while the function waits on I/O*, so "it takes 8 seconds" is not itself a cost.
+
 | If this grew | Look at |
 |---|---|
 | **Invocations** | Cache hit ratio, middleware matchers, bot traffic, polling clients |
-| **Duration** | Region mismatch, waterfalls, an unindexed query, a raised `maxDuration` |
-| **Bytes** | Payload sizes, image optimisation, cross-region egress |
+| **Active CPU** | Real compute — unindexed queries done in-process, serialisation, image work. Not I/O waiting |
+| **Provisioned Memory** | A raised memory tier, and long-in-progress requests holding it |
+| **Data transfer** | Payload sizes, image optimisation, cross-region egress |
 
 **(Vercel)**, and their list leads with the one this file originally omitted: **enable Fluid
 compute** · tune ISR revalidation · review image-optimization pricing · move large media to Blob.
@@ -96,5 +105,7 @@ compute** · tune ISR revalidation · review image-optimization pricing · move 
    item without one is a gap that will be rediscovered during an incident.
 4. Re-run it after any architectural change, not just before the first launch.
 
-**"We reviewed it" is not an outcome. "Here are the fourteen items, twelve with evidence and
-two deliberately deferred, with reasons" is.**
+**"We reviewed it" is not an outcome. "Here are the items, N with evidence and M deliberately
+deferred, with reasons" is.** (An earlier revision said "the fourteen items" — an invented number,
+in the peroration of a file whose closing rule is *state the limit you relied on*. Vercel's
+checklist runs to roughly forty.)

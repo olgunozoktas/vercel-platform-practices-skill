@@ -54,12 +54,16 @@ Variables scope to Production / Preview / Development. Two rules:
 ## Reserved names — and `VERCEL_*` is NOT the risk
 
 **Corrected 2026-08-06.** This section previously said Vercel reserves `VERCEL_*` names. It does
-not. The actual reserved list is AWS/Lambda plumbing plus three others:
+not. The actual reserved list is eleven names — seven `AWS_*` plus four more:
 
 `AWS_SECRET_KEY` · `AWS_EXECUTION_ENV` · `AWS_LAMBDA_LOG_GROUP_NAME` ·
 `AWS_LAMBDA_LOG_STREAM_NAME` · `AWS_LAMBDA_FUNCTION_NAME` ·
 `AWS_LAMBDA_FUNCTION_MEMORY_SIZE` · `AWS_LAMBDA_FUNCTION_VERSION` · `NOW_REGION` ·
 **`TZ`** · `LAMBDA_TASK_ROOT` · `LAMBDA_RUNTIME_DIR`
+
+**Rotation has its own doc**, and this file previously pointed at the wrong one:
+[`/docs/environment-variables/rotating-secrets`](https://vercel.com/docs/environment-variables/rotating-secrets)
+carries the operative rule — update Vercel *before* invalidating the old credential.
 
 **`TZ` is the trap worth knowing** — it is a name an application might plausibly want to set,
 and it is reserved. The earlier warning pointed at the wrong prefix and missed it.
@@ -67,10 +71,6 @@ and it is reserved. The earlier warning pointed at the wrong prefix and missed i
 `VERCEL_*` is a different thing: **system-PROVIDED** variables (deployment URL, git commit SHA,
 environment name), not reserved-and-rejected ones. Use them instead of re-deriving the same facts
 into your own variables, which is a second source of truth that drifts.
-
-The system-provided ones are useful rather than merely reserved — deployment URL, git commit
-SHA, environment name. Use them instead of re-deriving the same facts from your own
-variables, which is a second source of truth that drifts.
 
 ## Rotation
 

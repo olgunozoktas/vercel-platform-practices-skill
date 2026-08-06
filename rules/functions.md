@@ -12,7 +12,11 @@ Read `2026-08-06`.
 
 ## Maximum duration — the numbers, and why raising it is rarely the fix
 
-Read from the duration doc's own table:
+Per-plan limits, from [`/docs/functions/limitations`](https://vercel.com/docs/functions/limitations)
+and the plan table in [`/docs/fluid-compute`](https://vercel.com/docs/fluid-compute). (An earlier
+revision credited these to the *duration* doc, which explains how to configure the value but
+contains no per-plan table — corrected, since this skill's own step 4 tells you to go and re-read
+the cited page.)
 
 | Plan | Default | Maximum | Extended maximum |
 |---|---|---|---|
@@ -87,13 +91,19 @@ Two consequences worth designing for:
 Memory and CPU are configured together — raising memory raises CPU. **Two corrections to the
 obvious cost intuition, both from the memory doc:**
 
-- **More memory can LOWER the bill.** *"Increasing memory also increases available CPU, which can
-  help CPU-intensive functions finish faster and **reduce Active CPU time**."* So "more memory =
-  more cost" is not a safe assumption for CPU-bound work; measure.
-- **Memory cannot be set in `vercel.json`.** *"You cannot set your memory size using
-  `vercel.json`. If you try to do so, you will receive a warning at build time."* It is a
-  dashboard/project setting — the one documented exception to this skill's general
-  prefer-config-over-dashboard advice.
+- **It moves TWO billing dimensions in opposite directions** — and an earlier revision of this
+  file quoted only the favourable half. Both, verbatim: *"Increasing memory also increases
+  available CPU, which can help CPU-intensive functions finish faster and **reduce Active CPU
+  time**"* **and** *"**Larger memory settings increase the GB-hour rate**"* for Provisioned Memory.
+  The docs never say the bill goes down. Net effect depends on whether the work is CPU-bound;
+  measure, do not assume either direction.
+- **Memory cannot be set in `vercel.json` — *with fluid compute enabled*.** The conditional is
+  load-bearing and an earlier revision dropped it: *"`memory`: Memory cannot be set in
+  `vercel.json` **with Fluid compute enabled**. Instead set it in the **Functions** section in your
+  project dashboard."* Without fluid compute it *can* — the advanced-configuration doc ships live
+  `"memory": 3009` examples. Note this interacts with the new-projects-only default above: a
+  pre-2025 project that never enabled fluid compute is exactly the project where `vercel.json`
+  works.
 
 **Measure before raising.** A function that is slow because of an unindexed query, a
 serial waterfall, or a cold external API gets no faster with more memory, and now costs
@@ -124,9 +134,16 @@ constraints the earlier text also missed:
 - **It carries a documented latency penalty for CPU-bound work** — the doc names image
   processing, LLM training, and large matrix calculations.
 
-So the decision is binary and workload-shaped: enable it for I/O-bound handlers that spend their
-time waiting, and leave it off for CPU-bound ones. Do not go looking for a concurrency number to
-tune.
+**And it is PROJECT-WIDE, not per-handler** — a second correction, because the first version of
+this fix replaced a fictional dial with a fictional per-function scope: *"Concurrency is now
+enabled for all functions in that project."* Two more documented facts:
+
+- **Redeploy to apply the change.**
+- **Node.js and Python only.**
+
+So the decision is one binary switch for the whole project, judged on the mix: worth it when the
+project's functions are mostly I/O-bound and waiting, risky when CPU-bound work dominates. You
+cannot split it per handler, so a project with both shapes has a real trade to make.
 
 ## What to check when a function is slow
 

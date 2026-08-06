@@ -5,8 +5,9 @@ Sources: [`/docs/routing`](https://vercel.com/docs/routing) ·
 [rewrites](https://vercel.com/docs/routing/rewrites) ·
 [project-level rules](https://vercel.com/docs/routing/project-routing-rules) ·
 [bulk redirects](https://vercel.com/docs/routing/redirects/bulk-redirects) ·
-[middleware](https://vercel.com/docs/routing-middleware) ·
-[edge middleware](https://vercel.com/docs/edge-middleware)
+[routing middleware](https://vercel.com/docs/routing-middleware)
+(**not** `/docs/edge-middleware` — Vercel marks Edge Middleware *"deprecated in favor of Routing
+Middleware"*; cited as co-equal by an earlier revision of this file)
 Read `2026-08-06`.
 
 ## Redirect vs rewrite — the distinction users can see

@@ -42,8 +42,13 @@ rate belongs in the firewall.
 - **Rate-limit the expensive routes specifically**, not the whole site uniformly. Sign-in,
   search, export, anything that writes or fans out. A uniform limit is either too loose for
   the expensive routes or too tight for the cheap ones.
-- **Attack mode is for incidents.** It challenges broadly, including real users, which is the
-  reason not to leave it on — **not** cost. Two facts that cut against a cost-based reading:
+- **Attack mode is for incidents — but the casualty is not who this file first said.** Corrected:
+  the docs say it *"can be safely used for extended periods without affecting search engine
+  indexing or webhook functionality"*, and recommend targeted use because *"Vercel's Firewall
+  already provides automatic DDoS protection"*. Browsers pass the challenge. What breaks is
+  **machine clients**: *"Standalone APIs, other backend frameworks, and non-recognized automated
+  services may not be able to pass challenges and could be blocked."* Aim the warning there.
+  And not at cost — Two facts that cut against a cost-based reading:
   it is *"available for free on all plans"* and *"requests blocked by Attack Mode do not count
   towards your usage limits."* So during an actual attack it is cheaper on, not more expensive.
   Know where the switch is before you need it.

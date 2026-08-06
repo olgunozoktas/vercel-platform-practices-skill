@@ -32,10 +32,17 @@ action that no longer exists on the new deployment. Symptoms: a chunk-load error
 action, or a subtly wrong response — reported by one user, unreproducible, and gone by the
 time you look.
 
-**Skew protection pins a client's requests to the deployment it was served from**, which
-removes the whole class. Enable it if your app is long-lived in the tab — dashboards, editors,
-anything a user leaves open. Read the doc for its window and its cost before assuming it is
-free.
+**Skew protection pins a client's requests to the deployment it was served from.** Two corrections
+to what this file first said:
+
+- **It is probably already on.** *"Projects created after **November 19th 2024** using one of the
+  supported frameworks **already have Skew Protection enabled by default**."* "Enable it if…" was
+  the wrong instruction for most current projects — check, don't enable.
+- **It does not remove the whole class.** It pins *framework-managed* requests only: *"The
+  framework **doesn't** automatically pin custom `fetch()` calls you make from client components"*
+  and *"**doesn't pin full-page navigations by default**."* So the residue is exactly the custom
+  `fetch` and hard-refresh paths a dashboard or editor leans on — which is the app type this
+  section is aimed at. Pin those deliberately.
 
 ## Deployment checks and hooks
 
@@ -48,8 +55,14 @@ free.
 
 Old deployments stay reachable until retention removes them. Two consequences:
 
-- **A tightened access policy is not retroactive** across deployments still in the retention
-  window. See [`deployment-protection.md`](deployment-protection.md).
+- **A protection change IS retroactive — corrected 2026-08-06.** This file previously said the
+  opposite, and contradicted `deployment-protection.md` while cross-referencing it. The docs are
+  explicit: *"Disabling Vercel Authentication renders **all existing deployments** unprotected"*,
+  and the same for Password Protection and Trusted IPs. Protection is evaluated per request from
+  current project settings, so it spans the whole retention window.
+  The *real* non-retroactivity is cookie-shaped: *"When you re-enable it, previously authenticated
+  users can maintain access without a new login, provided they already authenticated to the
+  specific deployment and have a cookie set in their browser."*
 - **A leaked secret in an old build is still in that old build.** Rotate; do not rely on the
   deployment aging out.
 

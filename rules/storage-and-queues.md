@@ -5,7 +5,9 @@ Sources: [`/docs/queues`](https://vercel.com/docs/queues) ·
 [poll mode](https://vercel.com/docs/queues/poll-mode) ·
 [queues limits](https://vercel.com/docs/queues/pricing) ·
 [`/docs/vercel-blob`](https://vercel.com/docs/vercel-blob) ·
-[`@vercel/blob`](https://vercel.com/docs/vercel-blob/using-blob-sdk) ·
+[server upload](https://vercel.com/docs/vercel-blob/server-upload) ·
+[client upload](https://vercel.com/docs/vercel-blob/client-upload) ·
+[blob pricing](https://vercel.com/docs/vercel-blob/usage-and-pricing) ·
 [marketplace storage](https://vercel.com/docs/marketplace-storage) ·
 [redis](https://vercel.com/docs/redis) · [postgres](https://vercel.com/docs/postgres) ·
 [`waitUntil`](https://vercel.com/docs/functions/functions-api-reference/vercel-functions-package)
