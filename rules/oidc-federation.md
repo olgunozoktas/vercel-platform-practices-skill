@@ -3,7 +3,7 @@
 Sources: [`/docs/oidc`](https://vercel.com/docs/oidc) ·
 [AWS](https://vercel.com/docs/oidc/aws) · [GCP](https://vercel.com/docs/oidc/gcp) ·
 [Azure](https://vercel.com/docs/oidc/azure) ·
-[your own API](https://vercel.com/docs/oidc/connect-to-your-own-api) ·
+[your own API](https://vercel.com/docs/oidc/api) ·
 [reference](https://vercel.com/docs/oidc/reference)
 Read `2026-08-06`.
 

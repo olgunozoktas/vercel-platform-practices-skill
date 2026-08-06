@@ -1,10 +1,10 @@
 # Observability — logs, drains, and what is actually queryable later
 
 Sources: [`/docs/drains`](https://vercel.com/docs/drains) ·
-[log drains reference](https://vercel.com/docs/drains/log-drains-reference) ·
-[audit log drains](https://vercel.com/docs/drains/audit-log-drains-reference) ·
-[Speed Insights drains](https://vercel.com/docs/drains/speed-insights-drains-reference) ·
-[drains security](https://vercel.com/docs/drains/drains-security) ·
+[log drains reference](https://vercel.com/docs/drains/reference/logs) ·
+[audit log drains](https://vercel.com/docs/drains/reference/audit-logs) ·
+[Speed Insights drains](https://vercel.com/docs/drains/reference/speed-insights) ·
+[drains security](https://vercel.com/docs/drains/security) ·
 [function logs](https://vercel.com/docs/functions/logs) ·
 [observability](https://vercel.com/docs/observability) ·
 [manage and optimize](https://vercel.com/docs/manage-and-optimize-observability) ·
@@ -20,17 +20,27 @@ Set up a log drain **before** the incident. Every incident post-mortem that begi
 have logs from then" was preventable by a configuration change nobody had a reason to make
 yet.
 
-## Three drain types, three different questions
+## FIVE drain data types, and each answers a different question
+
+**Corrected 2026-08-06** — this table said three. The docs list five: *"Drains support the
+following data types: **Logs**, **Traces**, **Speed Insights**, **Web Analytics**, **Audit
+Logs**."*
 
 | Drain | Answers |
 |---|---|
-| **Log drains** | What did the application do? |
-| **Audit log drains** | What did a *human on the team* do — settings, env vars, access? |
-| **Speed Insights drains** | What did real users experience? |
+| **Logs** | What did the application do? |
+| **Traces** | Where did the time go, across services? |
+| **Speed Insights** | What did real users experience? |
+| **Web Analytics** | What did they do? |
+| **Audit Logs** | What did a *human on the team* do — settings, env vars, access? |
 
-**Audit log drains are the one people forget**, and the one compliance asks for. There are
-documented integrations (S3, Splunk, Panther). "Who changed that environment variable, and
-when" is unanswerable retroactively without it.
+**Traces was the omission that mattered** — Vercel's own production checklist says "Consider
+adding Tracing", and a skill about observability that never mentions distributed tracing is
+missing the tool for "which downstream call is slow".
+
+**Audit log drains are the one people forget**, and the one compliance asks for. Documented
+destinations include Amazon S3, Splunk, **Datadog** and Panther. "Who changed that environment
+variable, and when" is unanswerable retroactively without it.
 
 ## Practices
 
@@ -39,7 +49,7 @@ when" is unanswerable retroactively without it.
   operationally useful.
 - **Never log secrets, tokens, full request bodies, or personal data.** A drain copies logs
   into a second system with its own access rules, so a leak into logs is now a leak into two
-  places. Read [drains security](https://vercel.com/docs/drains/drains-security) before
+  places. Read [drains security](https://vercel.com/docs/drains/security) before
   choosing a destination.
 - **Log volume is a cost.** Debug logging left on in production is a line item. Sample the
   high-volume paths rather than dropping the level everywhere and losing the errors too.

@@ -4,8 +4,8 @@ Sources: [`/docs/deployment-protection`](https://vercel.com/docs/deployment-prot
 [methods](https://vercel.com/docs/deployment-protection/methods-to-protect-deployments) ·
 [bypass](https://vercel.com/docs/deployment-protection/methods-to-bypass-deployment-protection) ·
 [automated & agent access](https://vercel.com/docs/deployment-protection/methods-to-bypass-deployment-protection) ·
-[exceptions](https://vercel.com/docs/deployment-protection/exceptions) ·
-[OPTIONS allowlist](https://vercel.com/docs/deployment-protection/options-allowlist) ·
+[exceptions](https://vercel.com/docs/deployment-protection/methods-to-bypass-deployment-protection/deployment-protection-exceptions) ·
+[OPTIONS allowlist](https://vercel.com/docs/deployment-protection/methods-to-bypass-deployment-protection/options-allowlist) ·
 [retention](https://vercel.com/docs/deployment-retention)
 Read `2026-08-06`.
 

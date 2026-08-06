@@ -3,8 +3,8 @@
 Sources: [`/docs/routing`](https://vercel.com/docs/routing) ·
 [redirects](https://vercel.com/docs/routing/redirects) ·
 [rewrites](https://vercel.com/docs/routing/rewrites) ·
-[project-level rules](https://vercel.com/docs/routing/project-level-routing-rules) ·
-[bulk redirects](https://vercel.com/docs/routing/bulk-redirects) ·
+[project-level rules](https://vercel.com/docs/routing/project-routing-rules) ·
+[bulk redirects](https://vercel.com/docs/routing/redirects/bulk-redirects) ·
 [middleware](https://vercel.com/docs/routing-middleware) ·
 [edge middleware](https://vercel.com/docs/edge-middleware)
 Read `2026-08-06`.

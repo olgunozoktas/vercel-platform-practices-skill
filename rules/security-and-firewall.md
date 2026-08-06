@@ -1,15 +1,15 @@
 # Security and the firewall — stop it before it costs an invocation
 
 Sources: [`/docs/vercel-firewall`](https://vercel.com/docs/vercel-firewall) ·
-[concepts](https://vercel.com/docs/vercel-firewall/concepts) ·
-[rate limiting SDK](https://vercel.com/docs/vercel-firewall/rate-limiting-sdk) ·
+[concepts](https://vercel.com/docs/vercel-firewall/firewall-concepts) ·
+[rate limiting SDK](https://vercel.com/docs/vercel-firewall/vercel-waf/rate-limiting-sdk) ·
 [attack mode](https://vercel.com/docs/vercel-firewall/attack-mode) ·
 [DDoS](https://vercel.com/docs/vercel-firewall/ddos-mitigation) ·
-[IP allowlist](https://vercel.com/docs/vercel-firewall/restrict-access-to-trusted-ip-addresses) ·
+[IP allowlist](https://vercel.com/docs/vercel-firewall/vercel-waf/trusted-ip-access) ·
 [observability](https://vercel.com/docs/vercel-firewall/firewall-observability) ·
 [bot management](https://vercel.com/docs/bot-management) ·
-[security headers](https://vercel.com/docs/headers/security-headers) ·
-[CDN security](https://vercel.com/docs/cdn/cdn-security)
+[security headers](https://vercel.com/docs/cdn-security/security-headers) ·
+[CDN security](https://vercel.com/docs/cdn-security)
 Read `2026-08-06`.
 
 ## The economic argument, which is also the security argument
@@ -42,8 +42,11 @@ rate belongs in the firewall.
 - **Rate-limit the expensive routes specifically**, not the whole site uniformly. Sign-in,
   search, export, anything that writes or fans out. A uniform limit is either too loose for
   the expensive routes or too tight for the cheap ones.
-- **Attack mode is for incidents.** It challenges broadly, including real users. Know where
-  the switch is before you need it; do not leave it on.
+- **Attack mode is for incidents.** It challenges broadly, including real users, which is the
+  reason not to leave it on — **not** cost. Two facts that cut against a cost-based reading:
+  it is *"available for free on all plans"* and *"requests blocked by Attack Mode do not count
+  towards your usage limits."* So during an actual attack it is cheaper on, not more expensive.
+  Know where the switch is before you need it.
 - **Read firewall observability after every rule change.** A rule with no matches is either
   unnecessary or wrong, and both are worth knowing.
 - **Allowlist admin surfaces by IP** where the team's network allows it. Cheapest strong
@@ -53,7 +56,7 @@ rate belongs in the firewall.
 
 A Content Security Policy and the standard security headers are application configuration and
 belong in your headers config —
-[`/docs/headers/security-headers`](https://vercel.com/docs/headers/security-headers). The
+[`/docs/headers/security-headers`](https://vercel.com/docs/cdn-security/security-headers). The
 production checklist calls out CSP explicitly, and Vercel's own conformance ruleset has a
 rule for missing Next.js security headers
 ([`NEXTJS_MISSING_SECURITY_HEADERS`](https://vercel.com/docs/conformance/rules/NEXTJS_MISSING_SECURITY_HEADERS)).

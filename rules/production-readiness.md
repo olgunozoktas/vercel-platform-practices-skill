@@ -6,6 +6,18 @@ Vercel's engineering team, organised into five pillars. Read `2026-08-06`.
 This file is a way to *work* the checklist, not a replacement for it. **Read the live doc**;
 it is maintained and this is not.
 
+> **Attribution corrected 2026-08-06.** The first version presented the bullets below as though
+> they were Vercel's checklist items. Several are **not** — the Reliability list especially is
+> mine, not theirs. Vercel's actual Reliability items are: Observability Plus, automatic Function
+> failover, Secure Compute passive failover, caching headers, understanding caching-vs-ISR,
+> Tracing, and load testing. And their Cost pillar leads with **"Enable Fluid compute"**, then ISR
+> revalidation tuning, image-optimization pricing, and moving large media to Blob — none of which
+> appeared here.
+>
+> Below, **(Vercel)** marks a real checklist item and **(added)** marks mine. That distinction is
+> the point of the fix: a reader working this file was told they had walked Vercel's checklist when
+> they had walked mine.
+
 ## The five pillars, and the question each one really asks
 
 ### Operational excellence — "who does what at 3am?"
@@ -20,6 +32,9 @@ they will find it.
 
 ### Security — "what is exposed that should not be?"
 
+**(Vercel)** CSP and security headers · Deployment Protection · WAF. **(added)** the OIDC and
+sensitive-variable items below.
+
 - A **Content Security Policy** and the standard security headers. Add it early in
   report-only mode; a CSP added late is a CSP that breaks a live page.
 - **Deployment protection** enabled, with documented bypasses for automation rather than an
@@ -32,6 +47,11 @@ they will find it.
   [`environment-and-secrets.md`](environment-and-secrets.md).
 
 ### Reliability — "what happens when a dependency is down?"
+
+**(Vercel)** Observability Plus · automatic Function failover · Secure Compute passive failover ·
+caching headers · understand caching vs ISR · **Tracing** · load testing.
+
+**(added)** — mine, not on their list, and worth doing anyway:
 
 - Every external call has a timeout and a defined behaviour on failure. A page that renders
   a degraded state beats a page that hangs.
@@ -58,6 +78,9 @@ do**:
 | **Invocations** | Cache hit ratio, middleware matchers, bot traffic, polling clients |
 | **Duration** | Region mismatch, waterfalls, an unindexed query, a raised `maxDuration` |
 | **Bytes** | Payload sizes, image optimisation, cross-region egress |
+
+**(Vercel)**, and their list leads with the one this file originally omitted: **enable Fluid
+compute** · tune ISR revalidation · review image-optimization pricing · move large media to Blob.
 
 - Set **spend management** limits and alerts *before* launch
   ([`/docs/spend-management`](https://vercel.com/docs/spend-management)). An alert you

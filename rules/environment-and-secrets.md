@@ -11,8 +11,11 @@ Read `2026-08-06`.
 
 ## The prefix decides who can read it — and it is irreversible once deployed
 
-A framework's public prefix (`NEXT_PUBLIC_`, `VITE_`, …) **inlines the value into the client
-bundle at build time.** Consequences people discover late:
+A framework's public prefix (`NEXT_PUBLIC_`, `VITE_`, …) exposes the value to the browser at
+build time. (Vercel's docs say only that frameworks "use a prefix in order to expose environment
+variables to the browser" and that values are available during the build step; the inlining
+mechanics and the conclusions below are reasoning from that, not Vercel's text.) Consequences
+people discover late:
 
 - It is readable by anyone who loads the page. Not "hard to find" — readable.
 - It is baked into every build artifact, so removing the variable later does not remove it
@@ -22,15 +25,21 @@ bundle at build time.** Consequences people discover late:
 
 **Default to no prefix.** Add one only for a value you would print on the page.
 
-## Sensitive variables exist — use them for secrets
+## Sensitive variables — use them for secrets, with two operational caveats
 
-Vercel supports marking a variable **sensitive**, which makes it write-only: it can be set
-and used but not read back through the dashboard or API. That is the right setting for every
-credential, and it costs nothing.
+Marking a variable **sensitive** makes it write-only: settable and usable, *"non-readable once
+created"*, stored *"in an unreadable format"*. That is the right setting for every credential.
 
-The trade is real and worth stating: **you cannot recover a sensitive value.** If it is the
-only copy, losing it means rotating at the provider. Store the source of truth in your
-password manager, not in Vercel's UI.
+**Two constraints the first version of this file omitted, and both bite immediately:**
+
+- **Production and Preview only.** Development targets stay merely `encrypted` — the API does not
+  allow sensitive variables in development. So "mark every secret sensitive" is not achievable
+  across all three environments.
+- **To make an EXISTING variable sensitive you must remove and re-add it.** There is no toggle.
+  Plan a brief window, or do it as part of a rotation.
+
+The trade is real: **you cannot recover a sensitive value.** If it is the only copy, losing it
+means rotating at the provider. Keep the source of truth in your password manager, not Vercel's UI.
 
 ## Per-environment values, and the trap in preview
 
@@ -42,11 +51,22 @@ Variables scope to Production / Preview / Development. Two rules:
 - **Branch-scoped preview values** are the mechanism when one preview genuinely needs
   different config. Prefer that to loosening production.
 
-## Reserved names
+## Reserved names — and `VERCEL_*` is NOT the risk
 
-Vercel reserves a set of names (`VERCEL_*` and others — see the reserved-variables doc) and
-will reject or override collisions. **Read that list before naming anything `VERCEL_`-ish.**
-The failure is confusing: your value silently is not what you set.
+**Corrected 2026-08-06.** This section previously said Vercel reserves `VERCEL_*` names. It does
+not. The actual reserved list is AWS/Lambda plumbing plus three others:
+
+`AWS_SECRET_KEY` · `AWS_EXECUTION_ENV` · `AWS_LAMBDA_LOG_GROUP_NAME` ·
+`AWS_LAMBDA_LOG_STREAM_NAME` · `AWS_LAMBDA_FUNCTION_NAME` ·
+`AWS_LAMBDA_FUNCTION_MEMORY_SIZE` · `AWS_LAMBDA_FUNCTION_VERSION` · `NOW_REGION` ·
+**`TZ`** · `LAMBDA_TASK_ROOT` · `LAMBDA_RUNTIME_DIR`
+
+**`TZ` is the trap worth knowing** — it is a name an application might plausibly want to set,
+and it is reserved. The earlier warning pointed at the wrong prefix and missed it.
+
+`VERCEL_*` is a different thing: **system-PROVIDED** variables (deployment URL, git commit SHA,
+environment name), not reserved-and-rejected ones. Use them instead of re-deriving the same facts
+into your own variables, which is a second source of truth that drifts.
 
 The system-provided ones are useful rather than merely reserved — deployment URL, git commit
 SHA, environment name. Use them instead of re-deriving the same facts from your own

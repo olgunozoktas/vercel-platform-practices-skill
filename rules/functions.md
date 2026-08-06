@@ -52,13 +52,21 @@ have measured a legitimately long job — a large export, a batch — and otherw
 work.
 
 **A long job usually wants a different shape.** If the work does not have to finish before
-the response, `waitUntil` from `@vercel/functions` continues it after the response is sent;
+the response, `after()` from `next/server` continues it after the response is sent (or
+`waitUntil` from `@vercel/functions` on other frameworks / Next below 15.1);
 if it is genuinely long-running, a queue is the right tool. See
 [`storage-and-queues.md`](storage-and-queues.md).
 
-## Fluid compute is the default, and it changes the economics
+## Fluid compute — default for NEW projects only, and it changes the economics
 
-Per the fluid-compute doc: it is enabled by default with per-plan preset defaults, and its
+**The qualifier matters and this file previously omitted it.** Per
+[`/docs/fluid-compute`](https://vercel.com/docs/fluid-compute): *"As of April 23, 2025, fluid
+compute is enabled by default **for new projects**."* Existing projects enable it from the
+Functions settings. **The duration table above is scoped to fluid compute**, so a pre-2025
+project that never enabled it may be reading limits that do not apply — check the project's
+Functions settings before relying on them.
+
+Otherwise: it is enabled with per-plan preset defaults, and its
 distinguishing feature is **optimized concurrency — multiple invocations handled inside one
 function instance** (Node.js and Python runtimes). It scales by using existing resources
 before adding instances.
@@ -76,10 +84,16 @@ Two consequences worth designing for:
 
 ## Memory and CPU
 
-Memory and CPU are configured together — raising memory raises CPU proportionally, so
-"raise memory" is also "pay more per unit time". Verify the current per-plan options in
-[`/memory`](https://vercel.com/docs/functions/configuring-functions/memory) rather than
-assuming; the tiers change.
+Memory and CPU are configured together — raising memory raises CPU. **Two corrections to the
+obvious cost intuition, both from the memory doc:**
+
+- **More memory can LOWER the bill.** *"Increasing memory also increases available CPU, which can
+  help CPU-intensive functions finish faster and **reduce Active CPU time**."* So "more memory =
+  more cost" is not a safe assumption for CPU-bound work; measure.
+- **Memory cannot be set in `vercel.json`.** *"You cannot set your memory size using
+  `vercel.json`. If you try to do so, you will receive a warning at build time."* It is a
+  dashboard/project setting — the one documented exception to this skill's general
+  prefer-config-over-dashboard advice.
 
 **Measure before raising.** A function that is slow because of an unindexed query, a
 serial waterfall, or a cold external API gets no faster with more memory, and now costs
@@ -98,17 +112,21 @@ that issues five sequential queries pays it five times.
 - Changing regions changes latency for everyone, not just the slow route. Treat it as a
   deployment-wide decision.
 
-## Concurrency
+## Concurrency — a toggle, not a dial
 
-In-function concurrency is configurable
-([`/concurrency`](https://vercel.com/docs/functions/configuring-functions/concurrency)) and
-interacts with memory: more concurrent invocations share one instance's resources. Raising
-concurrency on a memory-hungry handler trades cost for the risk of resource contention
-inside the instance.
+**Corrected 2026-08-06.** This section previously described in-function concurrency as a numeric
+setting with a default to leave alone. **There is no such number.** Per
+[`/concurrency`](https://vercel.com/docs/functions/configuring-functions/concurrency) it is an
+opt-in switch — *"Toggle the switch to **Enabled**, and click **Save**"* — with two real
+constraints the earlier text also missed:
 
-Leave the default unless you have measured a specific bottleneck. The default is chosen to
-balance cost and performance, and both directions have a failure mode — too low wastes
-instances, too high starves them.
+- **It requires at least 1 vCPU** (the "Standard" or "Performance" memory tiers).
+- **It carries a documented latency penalty for CPU-bound work** — the doc names image
+  processing, LLM training, and large matrix calculations.
+
+So the decision is binary and workload-shaped: enable it for I/O-bound handlers that spend their
+time waiting, and leave it off for CPU-bound ones. Do not go looking for a concurrency number to
+tune.
 
 ## What to check when a function is slow
 
