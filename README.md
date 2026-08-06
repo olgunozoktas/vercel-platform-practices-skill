@@ -25,6 +25,21 @@ Plan limits, pricing and beta scope drift. The rule files carry the source URL p
 load-bearing number can be re-checked against the live doc; treat the snapshot date as an
 "as of", not a guarantee.
 
+> **Corrections after an adversarial review, 2026-08-06.** Every hard *number* survived — the
+> nine-cell duration table (corroborated in three corpus locations), the Secure-Compute 800s cap,
+> single-region ISR, the default `Cache-Control` string, the three token scopes, the five checklist
+> pillars. But **wherever this skill organised rather than quoted, it drifted**, and **15 of 88
+> cited URLs pointed at paths that do not exist** — which disabled this skill's own step-4
+> instruction to verify against the live doc. All 15 are fixed. Also corrected: the cache-layer
+> taxonomy (Data cache is a Next-14 construct, not a peer layer; the Image cache was missing;
+> Runtime cache is *regional*, not in-instance), in-function concurrency (a toggle, not a dial),
+> the reserved-variable list (`VERCEL_*` is not reserved — `TZ` is), three drain types → five,
+> the production-checklist attribution, and `waitUntil` where the docs recommend `after()` on
+> Next 15.1+. Each carries an inline note in its rule file.
+>
+> **The systemic lesson: this skill is reliable where it quotes and drifts where it organises.**
+> If you are relying on a *table* here rather than a *quote*, check the doc.
+
 ## Why this exists alongside Vercel's official skills
 
 [`vercel-labs/agent-skills`](https://github.com/vercel-labs/agent-skills) is excellent and you
@@ -38,8 +53,8 @@ Measured on the upstream repo at `7c180d9`:
 
 | Skill | Size | Scope | Verdict |
 |---|---|---|---|
-| **`react-best-practices`** (official) | 76 files, ~28k words | React/Next component performance: waterfalls, bundle size, re-renders, server-side | **Better than anything here. Use it.** This skill deliberately does not cover component performance |
-| **`vercel-optimize`** (official) | 156 files, ~25k words, 15 Node scripts, ~30 support topics | Metrics-driven cost/performance audit of a *deployed* project | **Better where it can run** — it sees real metrics; this skill does not. See the caveat below |
+| **`react-best-practices`** (official) | **70 rules, ~14.6k words** | React/Next component performance: waterfalls, bundle size, re-renders, server-side | **Better than anything here. Use it.** This skill deliberately does not cover component performance |
+| **`vercel-optimize`** (official) | 15 scripts + ~75 lib modules + ~25k words of docs, **42** support topics | Metrics-driven cost/performance audit of a *deployed* project | **Better where it can run** — it sees real metrics; this skill does not. See the caveat below |
 | **`react-native-skills`** (official) | 42 files, ~19k words | React Native / Expo | Out of scope here |
 | **`react-view-transitions`** (official) | 8 files, ~11k words | View Transition API | Out of scope here |
 | **`composition-patterns`** (official) | 14 files, ~5.7k words | Component API design | Out of scope here |
@@ -66,11 +81,19 @@ replaces the other. The clearest split: `vercel-optimize` finds that a route is 
 [`rules/caching.md`](rules/caching.md) tells you what the four cache layers are and why
 `Cache-Control` defaults to not caching, so the route is cached correctly the first time.
 
-**3. Nothing official covers the security/ops surface at authoring time.** OIDC federation
-instead of stored cloud keys, sensitive-variable handling and rotation, deployment-protection
-bypasses for automation (including the `OPTIONS` preflight trap that presents as a CORS
-error), WAF log-before-block, audit log drains, queue-versus-`waitUntil` durability, skew
-protection, spend limits before launch. Those are in the docs and in no official skill.
+**3. FIVE of eight security/ops items are uncovered at authoring time — not eight.** Corrected
+after review, which found three of the original eight ARE covered by `vercel-optimize`: **OIDC**
+(its `ai-application.md` playbook calls an explicit API key "a regression… a long-lived secret"),
+**WAF log-before-block** (`bot-protection-product-guardrails.md` prefers "a staged Log to Challenge
+or Deny path"), and **queue-vs-post-response durability** (`post-response-work-waituntil.md`).
+
+**Still genuinely absent:** deployment-protection automation bypass and the `OPTIONS` preflight
+trap, audit log drains, skew protection, sensitive-variable rotation, and spend limits as a
+pre-launch step.
+
+**And the official skill endorses the gap** — `vercel-optimize`'s own `references/doctrine.md`
+puts security out of scope: *"Security advisories and credential rotation… **refer to a security
+skill, not this one.**"*
 
 ### What this skill is *worse* at, stated plainly
 
@@ -80,7 +103,7 @@ protection, spend limits before launch. Those are in the docs and in no official
 - **A snapshot, not a live feed.** The guidelines skills' runtime-fetch approach is genuinely
   better for freshness. The trade is offline capability and a silent failure mode; pick per
   environment.
-- **Smaller.** ~7.7k words against 28k. It is scoped, not comprehensive.
+- **Smaller.** ~7.7k words against ~14.6k on a like-for-like basis. Scoped, not comprehensive.
 
 ## Recommendation
 
