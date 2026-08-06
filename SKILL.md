@@ -1,6 +1,6 @@
 ---
 name: vercel-platform-practices
-description: "Apply this skill when configuring, deploying, securing, or operating an application ON the Vercel platform — as opposed to writing React components. Triggers on vercel.json and project configuration, function runtime settings (maxDuration, memory, regions, concurrency, fluid compute), Cache-Control and CDN/ISR/Data-cache layers, environment variables and secret handling, OIDC federation to AWS/GCP/Azure, deployment protection and automation bypass, the Web Application Firewall, rate limiting and bot management, log drains and observability, Queues and Blob storage, redirects/rewrites/middleware ordering, instant rollback, skew protection, spend management, and pre-launch production readiness. Also use when diagnosing a MISS that should be a HIT, a function that times out, a preview URL that 401s automation, or a bill that grew without a traffic change."
+description: "Apply this skill when configuring, deploying, securing, or operating an application ON the Vercel platform — as opposed to writing React components. Triggers on vercel.json and project configuration, function runtime settings (maxDuration, memory, regions, concurrency, fluid compute), Cache-Control and the CDN/ISR/Runtime/Image cache layers, environment variables and secret handling, OIDC federation to AWS/GCP/Azure, deployment protection and automation bypass, the Web Application Firewall, rate limiting and bot management, log drains and observability, Queues and Blob storage, redirects/rewrites/middleware ordering, instant rollback, skew protection, spend management, and pre-launch production readiness. Also use when diagnosing a MISS that should be a HIT, a function that times out, a preview URL that 401s automation, or a bill that grew without a traffic change."
 license: MIT
 metadata:
   author: olgunozoktas
@@ -28,21 +28,28 @@ better, larger, official skill for that. Route by question:
 
 | Question | Use |
 |---|---|
-| Is this component/data-fetch pattern fast? Waterfalls, bundle size, re-renders | **`react-best-practices`** (official, Vercel Engineering, ~28k words) |
+| Is this component/data-fetch pattern fast? Waterfalls, bundle size, re-renders | **`react-best-practices`** (official, Vercel Engineering, **70 rules / ~14.6k words**) |
 | My deployed project costs too much / a route is slow — find it from metrics | **`vercel-optimize`** (official; see the caveat below) |
 | Deploy this app / create a preview | **`deploy-to-vercel`** (official) |
 | Authenticate the CLI with a token instead of interactive login | **`vercel-cli-with-tokens`** (official) |
 | Component API design, compound components | **`composition-patterns`** (official) |
 | **How should this be configured, cached, secured, or operated on the platform?** | **this skill** |
 
-**The `vercel-optimize` caveat that decides when you can use it.** It is a genuinely good
-metrics-driven audit pipeline, and it drives ~15 Node scripts (`node scripts/*.mjs`) plus
-the Vercel API. On a machine where host Node is forbidden by policy — see
-`~/.claude/CLAUDE.md`'s dnpm rule — **those steps cannot be run**, and its container-wrapped
-equivalent does not exist because the scripts need network access and write access outside
-the project mount. This skill is reference-only and has no scripts, so it works under that
-policy and offline. Prefer `vercel-optimize` where its scripts CAN run; it sees real
-metrics and this skill does not.
+**The `vercel-optimize` caveat — and it is narrower than this skill first claimed.** It is a
+genuinely good metrics-driven audit pipeline driving ~15 Node scripts plus the Vercel API. On a
+machine where host Node is forbidden by policy (see `~/.claude/CLAUDE.md`'s dnpm rule) those steps
+cannot run as documented.
+
+**Corrected 2026-08-06:** the earlier wording called a containerised run architecturally
+impossible because the scripts "need write access outside the project mount". That overstated it —
+the convention uses `mktemp -d`, but every script accepts `--out`, so an in-project run directory
+satisfies them. The real blockers are network egress, a read-write mount, and an authenticated
+`vercel` CLI inside the container. Surmountable, not impossible.
+
+This skill is reference-only and has no scripts, so it works under that policy and offline.
+**Prefer `vercel-optimize` wherever its scripts can run — it sees real metrics and this skill does
+not.** And note its own `references/doctrine.md` hands security away: *"Security advisories and
+credential rotation… refer to a security skill, not this one."*
 
 ## Consistency First
 
@@ -79,7 +86,7 @@ deployment carries. If a setting exists in two places, say so rather than adding
 | --- | --- |
 | `vercel.json`, build/install commands, project settings, precedence | [`rules/project-configuration.md`](rules/project-configuration.md) |
 | `maxDuration`, memory/CPU, regions, concurrency, fluid compute, cold starts | [`rules/functions.md`](rules/functions.md) |
-| `Cache-Control`, CDN vs ISR vs Data cache, purging, MISS diagnosis | [`rules/caching.md`](rules/caching.md) |
+| `Cache-Control`, the four cache layers (CDN/ISR/Runtime/Image), purging, MISS diagnosis | [`rules/caching.md`](rules/caching.md) |
 | Environment variables, sensitive values, rotation, reserved names | [`rules/environment-and-secrets.md`](rules/environment-and-secrets.md) |
 | OIDC federation to AWS/GCP/Azure/your own API — no long-lived keys | [`rules/oidc-federation.md`](rules/oidc-federation.md) |
 | Preview protection, password/SSO, automation bypass, OPTIONS allowlist | [`rules/deployment-protection.md`](rules/deployment-protection.md) |

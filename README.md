@@ -62,7 +62,7 @@ Measured on the upstream repo at `7c180d9`:
 | **`vercel-cli-with-tokens`** (official) | 1 file, ~1.5k words | Token-based CLI auth | Complementary — this skill covers token *scoping* policy |
 | **`web-design-guidelines`** (official) | 1 file, **~176 words** | Thin wrapper that **fetches rules from a GitHub raw URL at runtime** | Always fresh; **fails offline** and silently breaks if the URL moves |
 | **`writing-guidelines`** (official) | 1 file, **~177 words** | Same runtime-fetch pattern | Same trade |
-| **`vercel-platform-practices`** (this) | 13 files, ~7.7k words | Platform config, functions, caching, secrets/OIDC, protection, firewall, routing, observability, storage, deploys, readiness | The gap: **authoring-time platform guidance**, offline, no scripts |
+| **`vercel-platform-practices`** (this) | 12 rules, **8,799 words** (SKILL + rules) | Platform config, functions, caching, secrets/OIDC, protection, firewall, routing, observability, storage, deploys, readiness | The gap: **authoring-time platform guidance**, offline, no scripts |
 
 ### The three differences that actually matter
 
@@ -103,7 +103,9 @@ skill, not this one.**"*
 - **A snapshot, not a live feed.** The guidelines skills' runtime-fetch approach is genuinely
   better for freshness. The trade is offline capability and a silent failure mode; pick per
   environment.
-- **Smaller.** ~7.7k words against ~14.6k on a like-for-like basis. Scoped, not comprehensive.
+- **Smaller.** 8,799 words against 14,554 on a true like-for-like basis (SKILL.md + rules for
+  both) — **1.65x**, not the ~1.9x an earlier revision implied. That earlier figure quoted my
+  rules-only count against their SKILL+rules total, which flattered the gap; corrected 2026-08-06.
 
 ## Recommendation
 
