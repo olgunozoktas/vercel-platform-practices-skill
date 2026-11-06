@@ -8,9 +8,8 @@ a pre-launch readiness pass.
 Install by symlinking into your skills directory:
 
 ```sh
-git clone https://github.com/olgunozoktas/vercel-platform-practices-skill.git \
-  ~/Herd/vercel-platform-practices-skill
-ln -s ~/Herd/vercel-platform-practices-skill ~/.claude/skills/vercel-platform-practices
+git clone https://github.com/olgunozoktas/vercel-platform-practices-skill.git
+ln -s "$PWD/vercel-platform-practices-skill" ~/.claude/skills/vercel-platform-practices
 ```
 
 Refresh with `git pull`. There is nothing to build and nothing to run.
